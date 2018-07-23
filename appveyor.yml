@@ -1,0 +1,82 @@
+# dev only
+-
+  environment:
+    package_semantic_version: 0.0.1
+  version: $(package_semantic_version).{build}
+  branches:
+    only:
+    - dev
+    - master
+  skip_tags: true
+  skip_commits:
+    files:
+      - .editorconfig
+      - .gitattributes
+      - .gitignore
+      - appveyor.yml
+      - LICENSE
+      - README.md
+      - Settings.StyleCop
+      - Yarm.Converter.sln
+      - Yarm.Converter.sln.DotSettings
+      - '**/*.csproj'
+  image: Visual Studio 2017
+  configuration: Debug
+  platform: Any CPU
+  dotnet_csproj:
+    patch: true
+    file: '**\*.csproj'
+    version: '$(package_semantic_version)'
+    package_version: '$(package_semantic_version)'
+  nuget:
+    disable_publish_on_pr: true
+  before_build:
+  - ps: dotnet restore
+  build:
+    verbosity: minimal
+
+# release/all
+-
+  environment:
+    package_semantic_version: 0.0.1
+  version: $(package_semantic_version).{build}
+  pull_requests:
+    do_not_increment_build_number: true
+  branches:
+    only:
+    - release/all
+  skip_tags: true
+#  skip_commits:
+#    files:
+#      - .editorconfig
+#      - .gitattributes
+#      - .gitignore
+#      - appveyor.yml
+#      - LICENSE
+#      - README.md
+#      - Settings.StyleCop
+#      - Yarm.Converter.sln
+#      - Yarm.Converter.sln.DotSettings
+#      - '**/*.csproj'
+  image: Visual Studio 2017
+  configuration: Release
+  platform: Any CPU
+  dotnet_csproj:
+    patch: true
+    file: '**\*.csproj'
+    version: '$(package_semantic_version)'
+    package_version: '$(package_semantic_version)'
+  nuget:
+    disable_publish_on_pr: true
+  before_build:
+  - ps: dotnet restore
+  build:
+    verbosity: minimal
+  artifacts:
+  - path: .\src\Yarm.Converters\**\*.nupkg
+    name: Yarm.Converters
+  deploy:
+  - provider: Environment
+    name: NuGet for YARM Converters
+  - provider: Environment
+    name: GitHub Release for YARM Converters
