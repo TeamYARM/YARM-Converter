@@ -1,4 +1,4 @@
-# YARM Converter #
+# YARM Converter [![Build status](https://ci.appveyor.com/api/projects/status/ve27k6oexib9neal/branch/dev?svg=true)](https://ci.appveyor.com/project/justinyoo/yarm-converter/branch/dev) [![](https://img.shields.io/nuget/dt/Yarm.Converters.svg)](https://www.nuget.org/packages/Yarm.Converters/) [![](https://img.shields.io/nuget/v/Yarm.Converters.svg)](https://www.nuget.org/packages/Yarm.Converters/) #
 
 **YARM Converter** is to help [ARM](https://docs.microsoft.com/en-us/azure/azure-resource-manager/) template authoring in [YAML](http://yaml.org/). Even though ARM templates officially only support JSON format, YAML as a superset of JSON is much better for writing ARM templates that have complex structure.
 
