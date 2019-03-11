@@ -1,14 +1,11 @@
+﻿using FluentAssertions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
-using FluentAssertions;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Yarm.Converters.Tests
 {
@@ -136,6 +133,28 @@ namespace Yarm.Converters.Tests
             dic[key2].Value<int>().Should().Be(value2);
             dic[key3].Value<bool>().Should().Be(value3);
             dic[key4].Values<string>().Should().BeEquivalentTo(value41, value42);
+        }
+
+        [TestMethod]
+        public void Given_Yaml_With_Merge_ToJson_ShouldReturn_Result()
+        {
+            var yaml = @"
+anchor: &default
+  key1: value1
+  key2: value2
+alias:
+  <<: *default
+  key2: Overriding key2
+  key3: value3
+";
+
+
+            var result = StringExtensions.ToJson(yaml);
+
+            var dic = JsonConvert.DeserializeObject<JObject>(result);
+            dic["alias"]["key1"].Value<string>().Should().Be("value1");
+            dic["alias"]["key2"].Value<string>().Should().Be("Overriding key2");
+            dic["alias"]["key3"].Value<string>().Should().Be("value3");
         }
     }
 }

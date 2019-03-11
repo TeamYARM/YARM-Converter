@@ -1,12 +1,10 @@
-﻿using System;
-using System.Dynamic;
-
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-
+using System;
+using System.Dynamic;
+using System.IO;
+using YamlDotNet.Core;
 using YamlDotNet.Serialization;
-
-using Serializer = SharpYaml.Serialization.Serializer;
 
 namespace Yarm.Converters
 {
@@ -56,18 +54,19 @@ namespace Yarm.Converters
                 return null;
             }
 
-            object deserialised;
+            object deserialized;
             try
             {
-                deserialised = new Serializer().Deserialize(yaml);
+                var reader = new MergingParser(new Parser(new StringReader(yaml)));
+
+                deserialized = new Deserializer().Deserialize(reader);
             }
             catch (Exception ex)
             {
                 throw new InvalidYamlException(ex.Message);
             }
 
-            var json = JsonConvert.SerializeObject(deserialised, Formatting.Indented);
-
+            var json = JsonConvert.SerializeObject(deserialized, Formatting.Indented);
             return json;
         }
     }
