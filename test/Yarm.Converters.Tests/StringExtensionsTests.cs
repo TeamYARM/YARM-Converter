@@ -137,5 +137,41 @@ namespace Yarm.Converters.Tests
             dic[key3].Value<bool>().Should().Be(value3);
             dic[key4].Values<string>().Should().BeEquivalentTo(value41, value42);
         }
+
+        [TestMethod]
+        public void Given_XYarm_Prefix_Should_Not_Serialize()
+        {
+            var result = StringExtensions.ToJson(xYarmYaml);
+
+            var dic = JsonConvert.DeserializeObject<JObject>(result);
+            dic.ContainsKey("x-yarm-very-ignored").Should().BeFalse();
+            dic.ContainsKey("x-yarm").Should().BeFalse();
+            dic["key1"].Value<string>().Should().Be("value");
+            dic["key2"].Value<string>().Should().Be("value2");
+            dic["key3"]["x-yarm-not-ignored"].Value<string>().Should().Be("mhm");
+        }
+
+        [TestMethod]
+        public void Given_XYarm_Prefix_Should_Serialize()
+        {
+            var result = StringExtensions.ToJson(xYarmYaml, skipXYarm: false);
+
+            var dic = JsonConvert.DeserializeObject<JObject>(result);
+            dic.ContainsKey("x-yarm-very-ignored").Should().BeTrue();
+            dic.ContainsKey("x-yarm").Should().BeTrue();
+            dic["key1"].Value<string>().Should().Be("value");
+            dic["key2"].Value<string>().Should().Be("value2");
+            dic["key3"]["x-yarm-not-ignored"].Value<string>().Should().Be("mhm");
+        }
+
+        private const string xYarmYaml = @"
+x-yarm-very-ignored: 3
+key1: value
+x-yarm:
+    shouldBeIgnored: yup
+key2: value2
+key3:
+    x-yarm-not-ignored: mhm";
+
     }
 }
