@@ -32,7 +32,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SharpYaml" Version="1.6.4" />
     <PackageReference Include="YamlDotNet" Version="5.0.1" />
   </ItemGroup>
 
