@@ -1,11 +1,14 @@
-﻿using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
+using FluentAssertions;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Yarm.Converters.Tests
 {
@@ -147,7 +150,6 @@ alias:
   key2: Overriding key2
   key3: value3
 ";
-
 
             var result = StringExtensions.ToJson(yaml);
 

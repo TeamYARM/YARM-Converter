@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System;
+﻿using System;
 using System.Dynamic;
 using System.IO;
+
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
 using YamlDotNet.Core;
 using YamlDotNet.Serialization;
 
