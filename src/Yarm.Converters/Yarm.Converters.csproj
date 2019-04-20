@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.3;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -9,7 +9,7 @@
     <Owners>Team YARM</Owners>
     <Authors>Justin Yoo</Authors>
     <Company>Team YARM</Company>
-    <Version>0.1.0.0</Version>
+    <Version>0.1.1.0</Version>
     <Title>Yarm.Converters</Title>
     <Product>Yarm.Converters</Product>
     <Summary>This is the YARM converter.</Summary>
@@ -23,7 +23,7 @@
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
   </ItemGroup>
 
@@ -32,19 +32,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="YamlDotNet" Version="5.0.1" />
+    <PackageReference Include="YamlDotNet" Version="6.0.0" />
   </ItemGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)|$(TargetFramework)'=='Debug|AnyCPU|netstandard1.3'">
-    <DocumentationFile>bin\Debug\netstandard1.3\Yarm.Converters.xml</DocumentationFile>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)|$(TargetFramework)'=='Debug|AnyCPU|net461'">
+    <DocumentationFile>bin\Debug\net461\Yarm.Converters.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)|$(TargetFramework)'=='Debug|AnyCPU|netstandard2.0'">
     <DocumentationFile>bin\Debug\netstandard2.0\Yarm.Converters.xml</DocumentationFile>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)|$(TargetFramework)'=='Release|AnyCPU|netstandard1.3'">
-    <DocumentationFile>bin\Release\netstandard1.3\Yarm.Converters.xml</DocumentationFile>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)|$(TargetFramework)'=='Release|AnyCPU|net461'">
+    <DocumentationFile>bin\Release\net461\Yarm.Converters.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)|$(TargetFramework)'=='Release|AnyCPU|netstandard2.0'">
