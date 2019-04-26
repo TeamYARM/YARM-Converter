@@ -1,8 +1,7 @@
 # dev only
 -
   environment:
-    package_semantic_version: 0.0.1
-    project_name: YARM.Converters
+    package_semantic_version: 0.1.0
   version: $(package_semantic_version).{build}
   branches:
     only:
@@ -39,8 +38,7 @@
 # release/all
 -
   environment:
-    package_semantic_version: 0.0.1
-    project_name: YARM.Converters
+    package_semantic_version: 0.1.0
   version: $(package_semantic_version).{build}
   pull_requests:
     do_not_increment_build_number: true
