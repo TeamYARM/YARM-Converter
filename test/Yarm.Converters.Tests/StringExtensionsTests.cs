@@ -153,7 +153,7 @@ key3:
         {
             var result = StringExtensions.ToJson(xYarmYaml);
 
-            var dic = JsonConvert.DeserializeObject<JObject>(result);
+            var dic = (IDictionary<string, JToken>)JsonConvert.DeserializeObject<JObject>(result);
             dic.ContainsKey("x-yarm-very-ignored").Should().BeFalse();
             dic.ContainsKey("x-yarm").Should().BeFalse();
             dic["key1"].Value<string>().Should().Be("value");
@@ -166,7 +166,7 @@ key3:
         {
             var result = StringExtensions.ToJson(xYarmYaml, skipXYarm: false);
 
-            var dic = JsonConvert.DeserializeObject<JObject>(result);
+            var dic = (IDictionary<string, JToken>)JsonConvert.DeserializeObject<JObject>(result);
             dic.ContainsKey("x-yarm-very-ignored").Should().BeTrue();
             dic.ContainsKey("x-yarm").Should().BeTrue();
             dic["key1"].Value<string>().Should().Be("value");
@@ -174,6 +174,7 @@ key3:
             dic["key3"]["x-yarm-not-ignored"].Value<string>().Should().Be("mhm");
         }
 
+        [TestMethod]
         public void Given_Yaml_With_Merge_ToJson_ShouldReturn_Result()
         {
             var yaml = @"
