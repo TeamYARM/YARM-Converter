@@ -1,12 +1,17 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Linq;
+
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Yarm.Converters
 {
-    internal class IgnoreXYarmJsonConverter : JsonConverter
+    /// <summary>
+    /// This represents the JSON converter entity that takes care of the <c>x-yarm</c> property at the root level of the YAML document.
+    /// </summary>
+    public class IgnoreXYarmJsonConverter : JsonConverter
     {
+        /// <inheritdoc />
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             JToken t = JToken.FromObject(value);
@@ -14,35 +19,53 @@ namespace Yarm.Converters
             if (t.Type != JTokenType.Object)
             {
                 t.WriteTo(writer);
+
+                return;
             }
-            else
+
+            JObject o = (JObject)t;
+
+            var propsToRemove = o.Properties()
+                                 .Where(x => IsPropertyNameXYarm(x.Name))
+                                 .Select(x => x.Name)
+                                 .ToList();
+
+            foreach (var prop in propsToRemove)
             {
-                JObject o = (JObject)t;
-
-                var propsToRemove = o.Properties().Where(x => x.Name == "x-yarm" || x.Name.StartsWith("x-yarm-")).Select(x => x.Name).ToList();
-
-                foreach(var prop in propsToRemove)
-                {
-                    o.Remove(prop);
-                }
-
-                o.WriteTo(writer);
+                o.Remove(prop);
             }
+
+            o.WriteTo(writer);
         }
 
+        /// <inheritdoc />
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             throw new NotImplementedException("Unnecessary because CanRead is false. The type will skip the converter.");
         }
 
-        public override bool CanRead
-        {
-            get { return false; }
-        }
+        /// <inheritdoc />
+        public override bool CanRead { get; } = false;
 
+        /// <inheritdoc />
         public override bool CanConvert(Type objectType)
         {
             return true;
+        }
+
+        private static bool IsPropertyNameXYarm(string name)
+        {
+            if (name.Equals("x-yarm", StringComparison.CurrentCultureIgnoreCase))
+            {
+                return true;
+            }
+
+            if (name.StartsWith("x-yarm-", StringComparison.CurrentCultureIgnoreCase))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

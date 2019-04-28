@@ -18,6 +18,15 @@ namespace Yarm.Converters.Tests
     [TestClass]
     public class StringExtensionsTests
     {
+        private const string xYarmYaml = @"
+x-yarm-very-ignored: 3
+key1: value
+x-yarm:
+    shouldBeIgnored: yup
+key2: value2
+key3:
+    x-yarm-not-ignored: mhm";
+
         [TestMethod]
         public void Given_NullParameter_ToYaml_ShouldReturn_Null()
         {
@@ -137,16 +146,6 @@ namespace Yarm.Converters.Tests
             dic[key3].Value<bool>().Should().Be(value3);
             dic[key4].Values<string>().Should().BeEquivalentTo(value41, value42);
         }
-
-        private const string xYarmYaml = @"
-x-yarm-very-ignored: 3
-key1: value
-x-yarm:
-    shouldBeIgnored: yup
-key2: value2
-key3:
-    x-yarm-not-ignored: mhm";
-
       
         [TestMethod]
         public void Given_XYarm_Prefix_Should_Not_Serialize()
@@ -164,7 +163,7 @@ key3:
         [TestMethod]
         public void Given_XYarm_Prefix_Should_Serialize()
         {
-            var result = StringExtensions.ToJson(xYarmYaml, skipXYarm: false);
+            var result = StringExtensions.ToJson(xYarmYaml, ignoreXYarm: false);
 
             var dic = (IDictionary<string, JToken>)JsonConvert.DeserializeObject<JObject>(result);
             dic.ContainsKey("x-yarm-very-ignored").Should().BeTrue();

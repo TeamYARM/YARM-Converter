@@ -48,9 +48,9 @@ namespace Yarm.Converters
         /// Converts the YAML string to JSON string.
         /// </summary>
         /// <param name="yaml">YAML string.</param>
-        /// <param name="skipXYarm">If set to 'true', ignores top level properties starting with 'x-yarm'.</param>
+        /// <param name="ignoreXYarm">Value indicating whether to ignore the top level properties is or starts with <c>x-yarm</c>, or not. Default value is <c>true</c>.</param>
         /// <returns>Returns JSON string converted.</returns>
-        public static string ToJson(this string yaml, bool skipXYarm = true)
+        public static string ToJson(this string yaml, bool ignoreXYarm = true)
         {
             if (string.IsNullOrWhiteSpace(yaml))
             {
@@ -69,7 +69,7 @@ namespace Yarm.Converters
                 throw new InvalidYamlException(ex.Message);
             }
 
-            var json = skipXYarm
+            var json = ignoreXYarm
                 ? JsonConvert.SerializeObject(deserialized, Formatting.Indented, new IgnoreXYarmJsonConverter())
                 : JsonConvert.SerializeObject(deserialized, Formatting.Indented);
 
