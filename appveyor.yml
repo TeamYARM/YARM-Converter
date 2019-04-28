@@ -1,7 +1,7 @@
 # dev only
 -
   environment:
-    package_semantic_version: 0.1.0
+    package_semantic_version: 0.2.0
   version: $(package_semantic_version).{build}
   branches:
     only:
