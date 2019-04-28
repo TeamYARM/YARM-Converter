@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +18,15 @@ namespace Yarm.Converters.Tests
     [TestClass]
     public class StringExtensionsTests
     {
+        private const string xYarmYaml = @"
+x-yarm-very-ignored: 3
+key1: value
+x-yarm:
+    shouldBeIgnored: yup
+key2: value2
+key3:
+    x-yarm-not-ignored: mhm";
+
         [TestMethod]
         public void Given_NullParameter_ToYaml_ShouldReturn_Null()
         {
@@ -136,6 +145,53 @@ namespace Yarm.Converters.Tests
             dic[key2].Value<int>().Should().Be(value2);
             dic[key3].Value<bool>().Should().Be(value3);
             dic[key4].Values<string>().Should().BeEquivalentTo(value41, value42);
+        }
+      
+        [TestMethod]
+        public void Given_XYarm_Prefix_Should_Not_Serialize()
+        {
+            var result = StringExtensions.ToJson(xYarmYaml);
+
+            var dic = (IDictionary<string, JToken>)JsonConvert.DeserializeObject<JObject>(result);
+            dic.ContainsKey("x-yarm-very-ignored").Should().BeFalse();
+            dic.ContainsKey("x-yarm").Should().BeFalse();
+            dic["key1"].Value<string>().Should().Be("value");
+            dic["key2"].Value<string>().Should().Be("value2");
+            dic["key3"]["x-yarm-not-ignored"].Value<string>().Should().Be("mhm");
+        }
+
+        [TestMethod]
+        public void Given_XYarm_Prefix_Should_Serialize()
+        {
+            var result = StringExtensions.ToJson(xYarmYaml, ignoreXYarm: false);
+
+            var dic = (IDictionary<string, JToken>)JsonConvert.DeserializeObject<JObject>(result);
+            dic.ContainsKey("x-yarm-very-ignored").Should().BeTrue();
+            dic.ContainsKey("x-yarm").Should().BeTrue();
+            dic["key1"].Value<string>().Should().Be("value");
+            dic["key2"].Value<string>().Should().Be("value2");
+            dic["key3"]["x-yarm-not-ignored"].Value<string>().Should().Be("mhm");
+        }
+
+        [TestMethod]
+        public void Given_Yaml_With_Merge_ToJson_ShouldReturn_Result()
+        {
+            var yaml = @"
+anchor: &default
+  key1: value1
+  key2: value2
+alias:
+  <<: *default
+  key2: Overriding key2
+  key3: value3
+";
+
+            var result = StringExtensions.ToJson(yaml);
+
+            var dic = JsonConvert.DeserializeObject<JObject>(result);
+            dic["alias"]["key1"].Value<string>().Should().Be("value1");
+            dic["alias"]["key2"].Value<string>().Should().Be("Overriding key2");
+            dic["alias"]["key3"].Value<string>().Should().Be("value3");
         }
     }
 }

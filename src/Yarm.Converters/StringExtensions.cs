@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Dynamic;
+using System.IO;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
+using YamlDotNet.Core;
 using YamlDotNet.Serialization;
-
-using Serializer = SharpYaml.Serialization.Serializer;
 
 namespace Yarm.Converters
 {
@@ -48,25 +48,30 @@ namespace Yarm.Converters
         /// Converts the YAML string to JSON string.
         /// </summary>
         /// <param name="yaml">YAML string.</param>
+        /// <param name="ignoreXYarm">Value indicating whether to ignore the top level properties is or starts with <c>x-yarm</c>, or not. Default value is <c>true</c>.</param>
         /// <returns>Returns JSON string converted.</returns>
-        public static string ToJson(this string yaml)
+        public static string ToJson(this string yaml, bool ignoreXYarm = true)
         {
             if (string.IsNullOrWhiteSpace(yaml))
             {
                 return null;
             }
 
-            object deserialised;
+            object deserialized;
             try
             {
-                deserialised = new Serializer().Deserialize(yaml);
+                var reader = new MergingParser(new Parser(new StringReader(yaml)));
+
+                deserialized = new Deserializer().Deserialize(reader);
             }
             catch (Exception ex)
             {
                 throw new InvalidYamlException(ex.Message);
             }
 
-            var json = JsonConvert.SerializeObject(deserialised, Formatting.Indented);
+            var json = ignoreXYarm
+                ? JsonConvert.SerializeObject(deserialized, Formatting.Indented, new IgnoreXYarmJsonConverter())
+                : JsonConvert.SerializeObject(deserialized, Formatting.Indented);
 
             return json;
         }
