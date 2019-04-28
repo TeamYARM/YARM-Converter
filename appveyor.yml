@@ -2,6 +2,7 @@
 -
   environment:
     package_semantic_version: 0.2.0
+    project_name: yarm-converters
   version: $(package_semantic_version).{build}
   branches:
     only:
@@ -38,7 +39,8 @@
 # release/all
 -
   environment:
-    package_semantic_version: 0.1.0
+    package_semantic_version: 0.2.0
+    project_name: yarm-converters
   version: $(package_semantic_version).{build}
   pull_requests:
     do_not_increment_build_number: true
