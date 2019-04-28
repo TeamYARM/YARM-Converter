@@ -3,6 +3,11 @@
 **YARM Converter** is to help [ARM](https://docs.microsoft.com/en-us/azure/azure-resource-manager/) template authoring in [YAML](http://yaml.org/). Even though ARM templates officially only support JSON format, YAML as a superset of JSON is much better for writing ARM templates that have complex structure.
 
 
+## Acknowledgement ##
+
+Due to the dependency, [YamlDotNet](https://github.com/aaubry/YamlDotNet), **YARM Converter** supports YAML [spec 1.1](https://yaml.org/spec/1.1/current.html).
+
+
 ## Usage ##
 
 **YARM Converter** contains two string extension methods &ndash; `.ToYaml()` and `.ToJson()`.
@@ -33,6 +38,37 @@ sb.AppendLine("outputs: {}");
 
 var yaml = sb.ToString();
 var json = yaml.ToJson();
+```
+
+
+### Anchor Merge in YAML ###
+
+YAML defines a spec of [`Anchor Merge`](https://yaml.org/type/merge.html). This is particularly useful for repeating sections in ARM templates. For example, if an ARM template uses the linked template approach, the master template typically includes many deployment resources of its resource type, `Microsoft.Resources/deployments`, which is mostly repetition. Another example could be the Logic Apps template consisting of many actions having similar structures to each other.
+
+In order to use the anchor merge in YARM, simply define anchor properties at the root level, with the prefix of `x-yarm-`.
+
+```yaml
+x-yarm-deployments: &deployments
+  apiVersion: "2018-11-01"
+  type: "Microsoft.Resources/deployments"
+  name: ""
+
+...
+
+resources:
+- <<: *deployments
+  name: "[DEPLOYMENT_NAME]"
+  dependsOn:
+  - "[resourceId('Microsoft.Resources/deployments', '[ANOTHER_DEPLOYMENT_NAME]')]"
+  properties:
+    mode: Incremental
+    templateLink:
+      uri: "https://base.template.location.uri"
+    parameters:
+      hello:
+        value: "world"
+      lorem:
+        value: "ipsum"
 ```
 
 
