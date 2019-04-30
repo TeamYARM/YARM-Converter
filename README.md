@@ -41,37 +41,6 @@ var json = yaml.ToJson();
 ```
 
 
-### Anchor Merge in YAML ###
-
-YAML defines a spec of [`Anchor Merge`](https://yaml.org/type/merge.html). This is particularly useful for repeating sections in ARM templates. For example, if an ARM template uses the linked template approach, the master template typically includes many deployment resources of its resource type, `Microsoft.Resources/deployments`, which is mostly repetition. Another example could be the Logic Apps template consisting of many actions having similar structures to each other.
-
-In order to use the anchor merge in YARM, simply define anchor properties at the root level, with the prefix of `x-yarm-`.
-
-```yaml
-x-yarm-deployments: &deployments
-  apiVersion: "2018-11-01"
-  type: "Microsoft.Resources/deployments"
-  name: ""
-
-...
-
-resources:
-- <<: *deployments
-  name: "[DEPLOYMENT_NAME]"
-  dependsOn:
-  - "[resourceId('Microsoft.Resources/deployments', '[ANOTHER_DEPLOYMENT_NAME]')]"
-  properties:
-    mode: Incremental
-    templateLink:
-      uri: "https://base.template.location.uri"
-    parameters:
-      hello:
-        value: "world"
-      lorem:
-        value: "ipsum"
-```
-
-
 ## Contribution ##
 
 Your contributions are always welcome! All your work should be done in your forked repository. Once you finish your work with corresponding tests, please send us a pull request onto our `dev` branch for review.

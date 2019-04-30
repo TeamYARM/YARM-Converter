@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Dynamic;
-using System.IO;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-using YamlDotNet.Core;
 using YamlDotNet.Serialization;
+
+using Serializer = SharpYaml.Serialization.Serializer;
 
 namespace Yarm.Converters
 {
@@ -60,9 +60,7 @@ namespace Yarm.Converters
             object deserialized;
             try
             {
-                var reader = new MergingParser(new Parser(new StringReader(yaml)));
-
-                deserialized = new Deserializer().Deserialize(reader);
+                deserialized = new Serializer().Deserialize(yaml);
             }
             catch (Exception ex)
             {
